@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Богданов Артур Владимирович</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Список задач</h1>
+
+        
+        <div class="task-section new-task-section">
+            <h2>Новая задача</h2>
+            <input type="text" id="new-task" placeholder="Название задачи...">
+            <button id="add-task">+ Добавить</button>
+        </div>
+
+        
+        <div class="horizontal-sections">
+            <div class="task-section">
+                <h2>Бэклог</h2>
+                <ul id="backlog">
+                    <li>Выучить js</li>
+                    <li>Выучить React</li>
+                    <li>Сделать домашку</li>
+                </ul>
+            </div>
+
+           
+            <div class="task-section">
+                <h2>В процессе</h2>
+                <ul id="in-progress">
+                    <li>Выпить смузии</li>
+                    <li>Попить воды</li>
+                </ul>
+            </div>
+
+            
+            <div class="task-section">
+                <h2>Готово</h2>
+                <ul id="done">
+                    <li>Позвонить маме</li>
+                    <li>Погладить кота</li>
+                </ul>
+            </div>
+
+            
+            <div class="task-section">
+                <h2>Корзина</h2>
+                <ul id="trash">
+                    <li>Сходить погулять</li>
+                    <li>Прочитать Войну и Мир</li>
+                    <li><button id="clear-trash">Очистить</button></li> 
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

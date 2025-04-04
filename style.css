@@ -1,0 +1,61 @@
+/* Общий стиль для всего документа */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+    color: #2d3436;
+    overflow-x: hidden; /* Запрещаем горизонтальный скролл для всей страницы */
+  }
+  
+  .board-app {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Стили для заголовка */
+  .board-app__header {
+    background-color: #12cc69;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  /* Стили для доски задач */
+  .taskboard__inner {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 15px;
+    flex-wrap: wrap; /* Перенос блоков на новую строку при нехватке места */
+  }
+  
+  /* Стили для списка задач */
+  .task-list {
+    flex: 1; /* Гибкое заполнение пространства */
+    min-width: 250px; /* Минимальная ширина блока */
+    max-width: calc(25% - 20px); /* Максимум 4 блока в строке */
+    background: #ebebee;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Учитываем padding в ширине */
+  }
+  
+  /* Адаптивные стили */
+  @media (max-width: 1200px) {
+    .task-list {
+      max-width: calc(33.333% - 20px); /* 3 блока в строке */
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .task-list {
+      max-width: calc(50% - 20px); /* 2 блока в строке */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .task-list {
+      max-width: 100%; /* 1 блок в строке */
+    }
+  }
