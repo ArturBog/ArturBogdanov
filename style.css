@@ -1,13 +1,19 @@
 /* Общий стиль для всего документа */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: fantasy;
     background-color: #f5f7fa;
     margin: 0;
     padding: 20px;
-    color: #2d3436;
+    color: #2786a0;
     overflow-x: hidden; /* Запрещаем горизонтальный скролл для всей страницы */
   }
   
+  h1 {
+    text-align: left;
+    font-family: fantasy;
+    color: #475c5c;;
+    margin-bottom: 10px;
+}
   .board-app {
     max-width: 1200px;
     margin: 0 auto;
@@ -15,7 +21,7 @@ body {
   
   /* Стили для заголовка */
   .board-app__header {
-    background-color: #12cc69;
+    background-color: #36c2bd;
     padding: 15px 20px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -27,6 +33,27 @@ body {
     gap: 20px;
     padding-bottom: 15px;
     flex-wrap: wrap; /* Перенос блоков на новую строку при нехватке места */
+  }
+  .taskboard__inner {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  [data-status="backlog"] {
+    background-color: #eff1f3;
+  }
+  
+  [data-status="in-progress"] {
+    background-color: #fff8e1;
+  }
+  
+  [data-status="done"] {
+    background-color: #e8f5e9;
+  }
+  
+  [data-status="trash"] {
+    background-color: #ffebee;
   }
   
   /* Стили для списка задач */
@@ -59,3 +86,42 @@ body {
       max-width: 100%; /* 1 блок в строке */
     }
   }
+  /* ======== Исправления для заголовка ======== */
+.board-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.board-app__header {
+  background-color: #1691d8;
+  color: #e3e6e9;
+  padding: 15px 20px;
+  margin: 0;
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  box-sizing: border-box;
+  order: -1; /* Гарантированно ставим хедер первым */
+}
+
+.board-app__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+/* ======== Гарантия отступов ======== */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ======== Дополнительная страховка ======== */
+@media (max-width: 768px) {
+  .board-app__header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}

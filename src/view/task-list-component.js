@@ -1,21 +1,23 @@
 import { createElement } from '../render.js';
 
-function createTaskListComponentTemplate(listConfig) {
+function createTaskListComponentTemplate(title, status) {
   return `
-    <div class="task-list" id="${listConfig.id}">
-      <h2 class="task-list__title">${listConfig.title}</h2>
+    <div class="task-list" data-status="${status}">
+      <h2 class="task-list__title">${title}</h2>
       <ul class="task-list__items"></ul>
+      ${status === 'trash' ? '<button class="clear-btn">Очистить</button>' : ''}
     </div>
   `;
 }
 
 export default class TaskListComponent {
-  constructor(listConfig) {
-    this.listConfig = listConfig;
+  constructor(title, status) {
+    this.title = title;
+    this.status = status;
   }
 
   getTemplate() {
-    return createTaskListComponentTemplate(this.listConfig);
+    return createTaskListComponentTemplate(this.title, this.status);
   }
 
   getElement() {
