@@ -1,10 +1,11 @@
 import { Status, StatusTitle } from '../const.js';
-import TaskModel from '../model/task-model.js';
-import TaskboardComponent from '../view/taskboard-component.js';
-import TaskListComponent from '../view/task-list-component.js';
-import TaskComponent from '../view/task-component.js';
+import { TaskModel } from '../model/task-model.js';
+import { TaskboardComponent } from '../view/taskboard-component.js';
+import { TaskListComponent } from '../view/task-list-component.js';
+import { TaskComponent } from '../view/task-component.js';
+import { NoTasksComponent } from '../view/no-tasks-component.js';
 
-export default class TasksBoardPresenter {
+export class TasksBoardPresenter {
   #taskModel = new TaskModel();
   #taskboardComponent = new TaskboardComponent();
   #container = null;
@@ -15,31 +16,60 @@ export default class TasksBoardPresenter {
 
   init() {
     this.#renderTaskBoard();
-    this.#renderTaskLists();
+    this.#renderAllTasksLists();
   }
 
   #renderTaskBoard() {
-    this.#container.appendChild(this.#taskboardComponent.getElement());
+    this.#container.append(this.#taskboardComponent.element);
   }
 
-  #renderTaskLists() {
-    const taskboardInner = this.#taskboardComponent.getElement().querySelector('.taskboard__inner');
-
+  #renderAllTasksLists() {
+    const taskboardInner = this.#taskboardComponent.element.querySelector('.taskboard__inner');
+    
     Object.values(Status).forEach((status) => {
-      const tasks = this.#taskModel.getTasksByStatus(status);
-      const taskListComponent = new TaskListComponent(StatusTitle[status], status);
-      taskboardInner.appendChild(taskListComponent.getElement());
-
-      this.#renderTasks(tasks, taskListComponent);
+      this.#renderTasksList(status, taskboardInner);
     });
   }
 
-  #renderTasks(tasks, taskListComponent) {
-    const tasksContainer = taskListComponent.getElement().querySelector('.task-list__items');
+  #renderTasksList(status, container) {
+    const tasks = this.#taskModel.getTasksByStatus(status);
+    const taskListComponent = new TaskListComponent(StatusTitle[status], status);
+    
+    container.append(taskListComponent.element);
+    
+    if (tasks.length === 0) {
+      this.#renderNoTasksPlaceholder(status, taskListComponent.element);
+    } else {
+      this.#renderTasks(tasks, taskListComponent.element);
+    }
+
+    if (status === Status.TRASH) {
+      this.#renderClearButton(taskListComponent.element);
+    }
+  }
+
+  #renderTasks(tasks, container) {
+    const tasksContainer = container.querySelector('.task-list__items');
     
     tasks.forEach((task) => {
       const taskComponent = new TaskComponent(task);
-      tasksContainer.appendChild(taskComponent.getElement());
+      tasksContainer.append(taskComponent.element);
     });
+  }
+
+  #renderNoTasksPlaceholder(status, container) {
+    const placeholder = new NoTasksComponent(StatusTitle[status]);
+    container.querySelector('.task-list__items').append(placeholder.element);
+  }
+
+  #renderClearButton(container) {
+    const button = document.createElement('button');
+    button.textContent = 'Очистить';
+    button.classList.add('clear-btn');
+    button.addEventListener('click', () => {
+      container.querySelector('.task-list__items').innerHTML = '';
+      this.#renderNoTasksPlaceholder(Status.TRASH, container);
+    });
+    container.append(button);
   }
 }

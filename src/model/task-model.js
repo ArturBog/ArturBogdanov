@@ -1,10 +1,10 @@
-import { tasks } from '../mock/task.js';
+import { tasks as mockTasks } from '../mock/task.js';
 import { Status } from '../const.js';
 
-export default class TaskModel {
-  #tasks = tasks;
+export class TaskModel {
+  #tasks = mockTasks;
 
-  getTasks() {
+  get tasks() {
     return this.#tasks;
   }
 
