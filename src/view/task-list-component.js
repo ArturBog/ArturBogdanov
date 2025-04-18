@@ -16,8 +16,17 @@ export class TaskListComponent extends AbstractComponent {
       <div class="task-list" data-status="${this.#status}">
         <h2 class="task-list__title">${this.#title}</h2>
         <ul class="task-list__items"></ul>
-        ${this.#status === Status.TRASH ? '<button class="clear-btn">Очистить</button>' : ''}
       </div>
     `;
+  }
+
+  setClearButtonHandler(handler) {
+    if (this.#status === Status.TRASH) {
+      const button = document.createElement('button');
+      button.className = 'clear-btn';
+      button.textContent = 'Очистить';
+      button.addEventListener('click', handler);
+      this.element.append(button);
+    }
   }
 }

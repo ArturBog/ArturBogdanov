@@ -15,6 +15,10 @@ export class TasksBoardPresenter {
   }
 
   init() {
+    this.#renderBoard();
+  }
+
+  #renderBoard() {
     this.#renderTaskBoard();
     this.#renderAllTasksLists();
   }
@@ -43,8 +47,11 @@ export class TasksBoardPresenter {
       this.#renderTasks(tasks, taskListComponent.element);
     }
 
+    // Важное изменение: перенесли логику кнопки в компонент списка
     if (status === Status.TRASH) {
-      this.#renderClearButton(taskListComponent.element);
+      taskListComponent.setClearButtonHandler(() => {
+        this.#clearTrashList(taskListComponent.element);
+      });
     }
   }
 
@@ -62,14 +69,8 @@ export class TasksBoardPresenter {
     container.querySelector('.task-list__items').append(placeholder.element);
   }
 
-  #renderClearButton(container) {
-    const button = document.createElement('button');
-    button.textContent = 'Очистить';
-    button.classList.add('clear-btn');
-    button.addEventListener('click', () => {
-      container.querySelector('.task-list__items').innerHTML = '';
-      this.#renderNoTasksPlaceholder(Status.TRASH, container);
-    });
-    container.append(button);
+  #clearTrashList(container) {
+    container.querySelector('.task-list__items').innerHTML = '';
+    this.#renderNoTasksPlaceholder(Status.TRASH, container);
   }
 }
