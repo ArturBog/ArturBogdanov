@@ -6,8 +6,22 @@ export const Status = {
 };
 
 export const StatusTitle = {
-  [Status.BACKLOG]: 'Бэклог',
-  [Status.IN_PROGRESS]: 'В процессе',
-  [Status.DONE]: 'Готово',
-  [Status.TRASH]: 'Корзина'
+  [Status.BACKLOG]: 'Backlog',
+  [Status.IN_PROGRESS]: 'In Progress',
+  [Status.DONE]: 'Done',
+  [Status.TRASH]: 'Trash'
+};
+
+export const UpdateType = {
+  INIT: 'INIT',
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  ERROR: 'ERROR'
+};
+
+export const UserAction = {
+  ADD_TASK: 'ADD_TASK',
+  UPDATE_TASK: 'UPDATE_TASK',
+  DELETE_TASK: 'DELETE_TASK'
 };

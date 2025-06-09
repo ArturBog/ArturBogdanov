@@ -1,6 +1,6 @@
 import { AbstractComponent } from '../framework/view/abstract-component.js';
 
-export class NoTasksComponent extends AbstractComponent {
+export default class NoTasksComponent extends AbstractComponent {
   constructor(status) {
     super();
     this.status = status;

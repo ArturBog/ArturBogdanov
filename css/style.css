@@ -1,16 +1,16 @@
 :root {
   /* Цветовая схема */
-  --color-primary: #0b8ad4;
+  --color-primary: #4CAF50;
   --color-secondary: #36c2bd;
-  --color-text: #2786a0;
-  --color-text-light: #475c5c;
+  --color-text: #2c3e50;
+  --color-text-light: #7f8c8d;
   --color-bg: #f5f7fa;
-  --color-card: #ebebee;
-  --color-danger: #ff6b6b;
+  --color-card: #ecf0f1;
+  --color-danger: #ff4444;
   --color-danger-hover: #ff5252;
-  --color-success: #e8f5e9;
-  --color-warning: #fff8e1;
-  --color-trash: #ffebee;
+  --color-success: #4CAF50;
+  --color-warning: #f39c12;
+  --color-trash: #95a5a6;
   
   /* Тени */
   --shadow-sm: 0 2px 4px rgba(183, 21, 21, 0.1);
@@ -31,12 +31,12 @@
 
 /* Базовые стили */
 body {
-  font-family: fantasy;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
-  padding: var(--space-lg);
-  line-height: 1.6;
+  padding: 20px;
+  color: var(--color-text);
+  background-color: #f5f6fa;
+  min-height: 100vh;
 }
 
 /* Типография */
@@ -48,60 +48,180 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 24px;
+  margin: 0;
 }
 
 /* Лейаут */
 .board-app {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  gap: var(--space-lg);
+  padding: 20px;
 }
 
 .board-app__header {
-  background-color: var(--color-primary);
-  color: white;
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.board-app__header h1 {
+  color: #333;
+  margin: 0;
+}
+
+.board-app__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
 }
 
 /* Доска задач */
+.taskboard {
+  margin-top: 20px;
+}
+
 .taskboard__inner {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
-.task-list {
-  background: var(--color-card);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s, box-shadow 0.2s;
+.taskboard__column {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.task-list:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+.taskboard__column--trash {
+  background: #f8f9fa;
+}
+
+.taskboard__title {
+  margin: 0 0 15px 0;
+  color: #333;
+  text-align: center;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.taskboard__tasks {
+  min-height: 100px;
+}
+
+/* Списки задач */
+.task-list {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.task-list__title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.task-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 200px;
 }
 
 /* Статусные цвета */
-[data-status="backlog"] { background: var(--color-card); }
-[data-status="in-progress"] { background: var(--color-warning); }
-[data-status="done"] { background: var(--color-success); }
-[data-status="trash"] { background: var(--color-trash); }
+[data-status="backlog"] { 
+  background: white;
+  border: 1px solid #e0e0e0;
+}
+[data-status="in-progress"] { 
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+}
+[data-status="done"] { 
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+[data-status="trash"] { 
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+}
 
 /* Элементы задач */
 .task {
   background: white;
-  padding: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: move;
+}
+
+.task:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task__content {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.task__title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.task__description {
+  margin: 5px 0 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.task__delete {
+  padding: 4px 8px;
+  background: var(--color-danger);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.task__delete:hover {
+  opacity: 1;
+}
+
+/* Состояния для drag and drop */
+.taskboard__tasks.drag-over {
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 2px dashed var(--color-primary);
+}
+
+.task.dragging {
+  opacity: 0.5;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* Состояния */
+.task-list--drag-over {
+  background-color: rgba(74, 144, 226, 0.1);
+  border: 2px dashed var(--color-primary);
 }
 
 /* Кнопки */
@@ -118,35 +238,39 @@ h1 {
 }
 
 .clear-btn {
-  display: block;
   width: 100%;
   padding: 8px;
-  margin-top: 15px;
-  background-color: #ff6b6b;
+  margin-top: 16px;
+  background-color: var(--color-danger);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .clear-btn:hover {
-  background-color: #ff5252;
+  background-color: #c0392b;
 }
 
 /* Адаптивность */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .taskboard__inner {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .taskboard__inner {
+    grid-template-columns: 1fr;
+  }
+  
   body {
-    padding: var(--space-md);
+    padding: 10px;
   }
   
   .task-list {
-    min-width: 100%;
+    margin-bottom: 20px;
   }
 }
 
@@ -160,31 +284,98 @@ h1 {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Состояния */
-.no-tasks {
+/* Загрузка */
+.loading {
   text-align: center;
-  padding: var(--space-lg);
-  color: var(--color-text-light);
-  font-style: italic;
-  opacity: 0.7;
+  padding: 40px;
 }
-.clear-btn {
-  transition: all 0.3s ease;
+
+.loading__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Ошибка */
+.error {
+  background-color: var(--color-danger);
+  color: white;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error__text {
+  margin-bottom: 1rem;
+}
+
+.error__retry {
+  padding: 0.5rem 1rem;
+  background: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+/* Форма добавления задачи */
+.add-task {
+  margin-bottom: 20px;
+}
+
+.add-task__form {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 10px;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.clear-btn--disabled {
-  background-color: #cccccc !important;
-  cursor: not-allowed;
+.add-task__input {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-.clear-btn svg {
-  width: 16px;
-  height: 16px;
+.add-task__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
 }
-.clear-btn--disabled {
-  background-color: #cccccc !important;
-  cursor: not-allowed;
+
+.add-task__button {
+  padding: 8px 16px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-task__button:hover {
+  background-color: #357abd;
+}
+
+/* Стили для задач в корзине */
+.taskboard__column--trash .task {
+  background: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+.taskboard__column--trash .task__title {
+  color: #6c757d;
+}
+
+.taskboard__column--trash .task__delete {
+  background: var(--color-trash);
 }

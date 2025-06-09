@@ -1,40 +1,147 @@
-import { HeaderComponent } from './view/header-component.js';
-import { FormAddTaskComponent } from './view/form-add-task-component.js';
-import { TasksBoardPresenter } from './presenter/tasks-board-presenter.js';
-import { TaskModel } from './model/task-model.js';
-import { tasks as mockTasks } from './mock/task.js';
-import { render, RenderPosition } from './framework/render.js';
+// Дожидаемся полной загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+  const API_URL = 'https://682781386b7628c529109aba.mockapi.io/tasks';
+  const taskForm = document.querySelector('.add-task__form');
+  const taskInput = document.querySelector('.add-task__input');
+  const taskboard = document.querySelector('.taskboard__inner');
 
-const initApp = () => {
-  // 1. Получаем контейнеры
-  const bodyContainer = document.querySelector('.board-app');
-  const formContainer = document.querySelector('.add-task');
-  const taskboardContainer = document.querySelector('.taskboard');
+  // Create columns
+  const columns = ['backlog', 'in-progress', 'done', 'trash'];
+  columns.forEach(status => {
+    const column = document.createElement('div');
+    column.className = `taskboard__column taskboard__column--${status}`;
+    column.innerHTML = `
+      <h2 class="taskboard__title">${status.replace('-', ' ').toUpperCase()}</h2>
+      <div class="taskboard__tasks" data-status="${status}"></div>
+    `;
+    taskboard.appendChild(column);
+  });
 
-  // 2. Инициализируем модель
-  const taskModel = new TaskModel(mockTasks);
+  // Render tasks
+  async function renderTasks() {
+    const res = await fetch(API_URL);
+    const tasks = await res.json();
+    console.log('Текущие задачи:', tasks);
+    document.querySelectorAll('.taskboard__tasks').forEach(column => {
+      column.innerHTML = '';
+      const status = column.dataset.status;
+      const columnTasks = tasks.filter(task => task.status === status);
+      if (columnTasks.length === 0) {
+        column.innerHTML = '<div class="no-tasks">Нет задач</div>';
+        return;
+      }
+      columnTasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task';
+        taskElement.draggable = true;
+        taskElement.dataset.id = task.id;
+        const taskContent = document.createElement('div');
+        taskContent.className = 'task__content';
+        const taskTitle = document.createElement('h3');
+        taskTitle.className = 'task__title';
+        taskTitle.textContent = task.title;
+        const taskDescription = document.createElement('p');
+        taskDescription.className = 'task__description';
+        taskDescription.textContent = task.description || '';
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'task__delete';
+        deleteButton.textContent = '×';
+        taskContent.appendChild(taskTitle);
+        taskContent.appendChild(taskDescription);
+        taskElement.appendChild(taskContent);
+        taskElement.appendChild(deleteButton);
+        // Drag and drop events
+        taskElement.addEventListener('dragstart', function(e) {
+          handleDragStart.call(this, e);
+        });
+        taskElement.addEventListener('dragend', function(e) {
+          handleDragEnd.call(this, e);
+        });
+        column.appendChild(taskElement);
+      });
+    });
+    attachColumnDnDHandlers();
+  }
 
-  // 3. Рендерим компоненты
-  render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
-  render(new FormAddTaskComponent(), formContainer);
+  // Add new task
+  taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = taskInput.value.trim();
+    if (!title) return;
+    const task = {
+      title,
+      description: '',
+      status: 'backlog'
+    };
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task)
+    });
+    await renderTasks();
+    taskInput.value = '';
+  });
 
-  // 4. Инициализируем презентер
-  const boardPresenter = new TasksBoardPresenter(taskboardContainer, taskModel);
-  boardPresenter.init();
-
-  // 5. Настраиваем обработчик формы
-  const form = formContainer.querySelector('.add-task__form');
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const input = form.querySelector('.add-task__input');
-    const title = input.value.trim();
-    
-    if (title) {
-      boardPresenter.handleAddTask(title);
-      input.value = ''; // Очищаем поле
-      input.focus(); // Возвращаем фокус
+  // Delete task
+  taskboard.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('task__delete')) {
+      const taskElement = e.target.closest('.task');
+      const taskId = taskElement.dataset.id;
+      // Получаем задачу
+      const res = await fetch(`${API_URL}/${taskId}`);
+      const task = await res.json();
+      if (task.status !== 'trash') {
+        // Перемещаем в корзину
+        await fetch(`${API_URL}/${taskId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'trash' })
+        });
+      } else {
+        // Удаляем навсегда
+        await fetch(`${API_URL}/${taskId}`, { method: 'DELETE' });
+      }
+      await renderTasks();
     }
   });
-};
 
-document.addEventListener('DOMContentLoaded', initApp);
+  // Drag and drop handlers
+  function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', this.dataset.id);
+    this.classList.add('dragging');
+  }
+  function handleDragEnd(e) {
+    this.classList.remove('dragging');
+  }
+  function attachColumnDnDHandlers() {
+    document.querySelectorAll('.taskboard__tasks').forEach(column => {
+      column.ondragover = (e) => {
+        e.preventDefault();
+        column.classList.add('drag-over');
+      };
+      column.ondragleave = () => {
+        column.classList.remove('drag-over');
+      };
+      column.ondrop = async (e) => {
+        e.preventDefault();
+        column.classList.remove('drag-over');
+        const taskId = e.dataTransfer.getData('text/plain');
+        const newStatus = column.dataset.status;
+        // Получаем задачу
+        const res = await fetch(`${API_URL}/${taskId}`);
+        const task = await res.json();
+        if (task) {
+          await fetch(`${API_URL}/${taskId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          });
+          await renderTasks();
+        }
+      };
+    });
+  }
+
+  // Initial render
+  renderTasks();
+});

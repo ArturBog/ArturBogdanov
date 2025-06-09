@@ -1,6 +1,6 @@
 import { AbstractComponent } from '../framework/view/abstract-component.js';
 
-export class FormAddTaskComponent extends AbstractComponent {
+export default class FormAddTaskComponent extends AbstractComponent {
   get template() {
     return `
       <form class="add-task__form">
@@ -10,11 +10,16 @@ export class FormAddTaskComponent extends AbstractComponent {
           placeholder="Введите задачу..."
           required
           minlength="3"
+          autocomplete="off"
         >
         <button class="add-task__button" type="submit">
           Добавить
         </button>
       </form>
     `;
+  }
+
+  setSubmitHandler(handler) {
+    this.element.addEventListener('submit', handler);
   }
 }

@@ -1,6 +1,6 @@
 import { AbstractComponent } from '../framework/view/abstract-component.js';
 
-export class TaskboardComponent extends AbstractComponent {
+export default class TaskboardComponent extends AbstractComponent {
   get template() {
     return `
       <section class="taskboard">

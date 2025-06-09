@@ -1,7 +1,7 @@
 import { AbstractComponent } from '../framework/view/abstract-component.js';
 import { Status } from '../const.js';
 
-export class TaskListComponent extends AbstractComponent {
+export default class TaskListComponent extends AbstractComponent {
   #title;
   #status;
 
@@ -17,7 +17,7 @@ export class TaskListComponent extends AbstractComponent {
         <h2 class="task-list__title">${this.#title}</h2>
         <ul class="task-list__items"></ul>
         ${this.#status === Status.TRASH ? 
-          `<button class="clear-btn">Очистить</button>` : ''}
+          `<button class="clear-btn" type="button">Очистить корзину</button>` : ''}
       </div>
     `;
   }
